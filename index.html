@@ -16,7 +16,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
         @keyframes marquee {
             0% { transform: translateX(100%); }
@@ -47,24 +47,24 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
-        // --- Ícones em SVG para evitar dependências externas ---
+        // --- Ícones em SVG para total compatibilidade ---
         const Icons = {
-            Shield: () => <svg size="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield-check w-full h-full"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>,
-            Activity: () => <svg size="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-activity w-full h-full"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
-            Bell: () => <svg size="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell w-full h-full"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
-            Dashboard: () => <svg size="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-layout-dashboard w-full h-full"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>,
-            Clipboard: () => <svg size="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-clipboard-list w-full h-full"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>,
-            Car: () => <svg size="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-car w-full h-full"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.7 0-1.3.3-1.8.7C2.3 8.6 1 10 1 10s-2.7.6-4.5 1.1c-.8.2-1.5 1-1.5 1.9v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>,
-            User: () => <svg size="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user w-full h-full"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-            Trash: () => <svg size="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash-2 w-full h-full"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>,
-            Search: () => <svg size="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search w-full h-full"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
-            PlusCircle: () => <svg size="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus-circle w-full h-full"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>,
-            MapPin: () => <svg size="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-map-pin w-full h-full"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            Shield: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>,
+            Activity: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
+            Bell: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
+            Dashboard: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>,
+            Clipboard: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>,
+            Car: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.7 0-1.3.3-1.8.7C2.3 8.6 1 10 1 10s-2.7.6-4.5 1.1c-.8.2-1.5 1-1.5 1.9v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>,
+            User: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+            Trash: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>,
+            Search: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+            PlusCircle: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>,
+            MapPin: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
         };
 
         const App = () => {
             const [registros, setRegistros] = useState(() => {
-                const saved = localStorage.getItem('portaria_github_v1');
+                const saved = localStorage.getItem('portaria_github_v2');
                 return saved ? JSON.parse(saved) : [];
             });
 
@@ -83,19 +83,19 @@
             const [anoFiltro, setAnoFiltro] = useState(new Date().getFullYear());
 
             useEffect(() => {
-                localStorage.setItem('portaria_github_v1', JSON.stringify(registros));
+                localStorage.setItem('portaria_github_v2', JSON.stringify(registros));
             }, [registros]);
 
             useEffect(() => { setPaginaAtual(1); }, [busca]);
 
-            // --- Cálculos ---
-            const hojeISO = new Date().toISOString().split('T')[0];
             const hojeBR = new Date().toLocaleDateString('pt-BR');
 
             const filtradosTotal = useMemo(() => {
                 return registros.filter(reg => {
                     const t = busca.toLowerCase();
-                    return reg.funcionario.toLowerCase().includes(t) || reg.unidade.toLowerCase().includes(t) || reg.status.toLowerCase().includes(t);
+                    return reg.funcionario.toLowerCase().includes(t) || 
+                           reg.unidade.toLowerCase().includes(t) || 
+                           reg.status.toLowerCase().includes(t);
                 });
             }, [registros, busca]);
 
@@ -111,7 +111,7 @@
                     return parseInt(parts[1]) === parseInt(mesFiltro) && parseInt(parts[2]) === parseInt(anoFiltro);
                 });
 
-                const total = data.length;
+                const total = data.length || 0;
                 const ativos = data.filter(r => r.status === 'autorizado').length;
                 
                 const uMap = {};
@@ -128,16 +128,26 @@
                 };
             }, [registros, mesFiltro, anoFiltro]);
 
-            // --- Ações ---
             const handleSave = (e) => {
                 e.preventDefault();
                 const agora = new Date();
                 const dataUsar = formData.dataManual ? new Date(formData.dataManual + "T12:00:00").toLocaleDateString('pt-BR') : hojeBR;
                 const horaUsar = formData.horaManual || agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-                const novo = { id: Date.now(), ...formData, status: 'solicitado', data: dataUsar, horaSolicitacao: horaUsar, horarioSaida: null, horarioRetorno: null };
+                const novo = { 
+                    id: Date.now(), 
+                    ...formData, 
+                    status: 'solicitado', 
+                    data: dataUsar, 
+                    horaSolicitacao: horaUsar, 
+                    horarioSaida: null, 
+                    horarioRetorno: null 
+                };
                 setRegistros([novo, ...registros]);
-                setFormData({ ...formData, funcionario: '', unidade: '', departamento: '', supervisor: '', usoVeiculo: false, placaVeiculo: '', cpf: '', empresaVisitante: '', dataManual: '', horaManual: '' });
+                setFormData({ 
+                    tipo: 'funcionario', funcionario: '', unidade: '', departamento: '', supervisor: '', 
+                    usoVeiculo: false, placaVeiculo: '', cpf: '', empresaVisitante: '', dataManual: '', horaManual: '' 
+                });
             };
 
             const toggleStatus = (id, next) => {
@@ -163,7 +173,7 @@
                 link.click();
             };
 
-            const totalPaginas = Math.ceil(filtradosTotal.length / itensPorPagina);
+            const totalPaginas = Math.ceil(filtradosTotal.length / itensPorPagina) || 1;
 
             return (
                 <div className="min-h-screen pb-10">
@@ -177,9 +187,9 @@
                                 </div>
                             </div>
                             <nav className="flex bg-black/20 p-1.5 rounded-2xl border border-white/5">
-                                <button onClick={() => setView('registros')} className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${view === 'registros' ? 'bg-white text-blue-950' : 'text-blue-100'}`}><div className="w-4 h-4"><Icons.Clipboard /></div> REGISTROS</button>
-                                <button onClick={() => setView('portaria')} className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${view === 'portaria' ? 'bg-white text-blue-950' : 'text-blue-100'}`}><div className="w-4 h-4"><Icons.Bell /></div> PORTARIA</button>
-                                <button onClick={() => setView('relatorio')} className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${view === 'relatorio' ? 'bg-white text-blue-950' : 'text-blue-100'}`}><div className="w-4 h-4"><Icons.Dashboard /></div> DASHBOARD</button>
+                                <button onClick={() => setView('registros')} className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${view === 'registros' ? 'bg-white text-blue-950 shadow-lg' : 'text-blue-100 hover:bg-white/10'}`}><div className="w-4 h-4"><Icons.Clipboard /></div> REGISTROS</button>
+                                <button onClick={() => setView('portaria')} className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${view === 'portaria' ? 'bg-white text-blue-950 shadow-lg' : 'text-blue-100 hover:bg-white/10'}`}><div className="w-4 h-4"><Icons.Bell /></div> PORTARIA</button>
+                                <button onClick={() => setView('relatorio')} className={`px-6 py-2.5 rounded-xl text-xs font-black transition-all flex items-center gap-2 ${view === 'relatorio' ? 'bg-white text-blue-950 shadow-lg' : 'text-blue-100 hover:bg-white/10'}`}><div className="w-4 h-4"><Icons.Dashboard /></div> DASHBOARD</button>
                             </nav>
                         </div>
                     </header>
@@ -190,45 +200,58 @@
                                 <div className="bg-sky-50 rounded-[2.5rem] shadow-xl border border-sky-200 overflow-hidden">
                                     <div className="bg-sky-500 p-8 text-white flex flex-col md:flex-row justify-between items-center gap-6">
                                         <div className="flex items-center gap-5">
-                                            <div className="bg-white p-3 rounded-2xl text-sky-500 w-12 h-12 shadow-lg shadow-sky-700/20"><Icons.Bell /></div>
+                                            <div className="bg-white p-3 rounded-2xl text-sky-500 w-12 h-12 shadow-lg"><Icons.Bell /></div>
                                             <div>
                                                 <h2 className="text-2xl font-black uppercase tracking-tight">Centro de Controle</h2>
-                                                <p className="text-[11px] font-bold uppercase opacity-80">Gestão em tempo real</p>
+                                                <p className="text-[11px] font-bold uppercase opacity-80 tracking-widest">Gestão em tempo real</p>
                                             </div>
                                         </div>
-                                        <div className="flex gap-8 text-center">
-                                            <div><span className="text-4xl font-black">{registros.filter(r => r.status === 'solicitado').length}</span><p className="text-[10px] font-black opacity-60 uppercase">Pedidos</p></div>
-                                            <div><span className="text-4xl font-black">{registros.filter(r => r.status === 'autorizado').length}</span><p className="text-[10px] font-black opacity-60 uppercase">Trânsito</p></div>
-                                            <div className="bg-white/10 px-6 py-2 rounded-2xl"><span className="text-4xl font-black">{registros.filter(r => r.data === hojeBR && r.status !== 'solicitado').length}</span><p className="text-[10px] font-black opacity-80 uppercase">Hoje</p></div>
+                                        <div className="flex items-center justify-center gap-6 md:gap-12 text-center">
+                                            <div className="min-w-[80px]">
+                                                <span className="text-4xl font-black block">{registros.filter(r => r.status === 'solicitado').length}</span>
+                                                <p className="text-[10px] font-black opacity-60 uppercase">Pedidos</p>
+                                            </div>
+                                            <div className="min-w-[80px]">
+                                                <span className="text-4xl font-black block">{registros.filter(r => r.status === 'autorizado').length}</span>
+                                                <p className="text-[10px] font-black opacity-60 uppercase">Trânsito</p>
+                                            </div>
+                                            <div className="bg-white/10 px-6 py-2 rounded-2xl border border-white/20 min-w-[100px]">
+                                                <span className="text-4xl font-black block">{registros.filter(r => r.data === hojeBR && r.status !== 'solicitado').length}</span>
+                                                <p className="text-[10px] font-black opacity-80 uppercase">Hoje</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="bg-sky-600 py-3 px-8 overflow-hidden flex items-center gap-4">
+                                    <div className="bg-sky-600 py-3 px-8 overflow-hidden flex items-center gap-4 border-t border-sky-400/30">
                                         <span className="text-[10px] font-black text-white uppercase whitespace-nowrap">Últimas Saídas:</span>
                                         <div className="relative flex-1 overflow-hidden h-5">
                                             <div className="absolute whitespace-nowrap animate-marquee flex gap-10 items-center text-white text-[10px] font-bold uppercase">
-                                                {registros.filter(r => r.status === 'autorizado').map((r, i) => (
-                                                    <span key={i}>➤ {r.funcionario} ({r.horarioSaida})</span>
-                                                ))}
+                                                {registros.filter(r => r.status === 'autorizado').length > 0 ? 
+                                                    registros.filter(r => r.status === 'autorizado').map((r, i) => (
+                                                        <span key={i}>➤ {r.funcionario} ({r.horarioSaida})</span>
+                                                    )) : <span>Aguardando movimentação...</span>
+                                                }
                                             </div>
                                         </div>
                                     </div>
                                     <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {registros.filter(r => r.status === 'solicitado' || r.status === 'autorizado').map(r => (
-                                            <div key={r.id} className="bg-white border-2 border-sky-100 rounded-[2rem] p-6 flex flex-col justify-between shadow-sm">
-                                                <div className="mb-4">
-                                                    <div className="flex justify-between items-start mb-4">
-                                                        <div className="bg-sky-100 p-3 rounded-xl text-sky-600 w-10 h-10"><Icons.User /></div>
-                                                        <span className={`text-[9px] font-black px-3 py-1 rounded-full uppercase ${r.status === 'solicitado' ? 'bg-amber-100 text-amber-600' : 'bg-sky-100 text-sky-600'}`}>{r.status}</span>
+                                        {registros.filter(r => r.status === 'solicitado' || r.status === 'autorizado').length > 0 ? 
+                                            registros.filter(r => r.status === 'solicitado' || r.status === 'autorizado').map(r => (
+                                                <div key={r.id} className="bg-white border-2 border-sky-100 rounded-[2rem] p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+                                                    <div className="mb-4">
+                                                        <div className="flex justify-between items-start mb-4">
+                                                            <div className="bg-sky-100 p-3 rounded-xl text-sky-600 w-10 h-10"><Icons.User /></div>
+                                                            <span className={`text-[9px] font-black px-3 py-1 rounded-full uppercase ${r.status === 'solicitado' ? 'bg-amber-100 text-amber-600' : 'bg-sky-100 text-sky-600'}`}>{r.status}</span>
+                                                        </div>
+                                                        <h4 className="font-black text-slate-800 uppercase text-lg">{r.funcionario}</h4>
+                                                        <p className="text-[10px] font-black text-sky-600 uppercase tracking-tight">{r.unidade} — {r.departamento}</p>
+                                                        {r.usoVeiculo && <div className="mt-3 text-[10px] font-black bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex items-center gap-2 uppercase tracking-widest text-slate-600"><div className="w-4 h-4"><Icons.Car /></div> {r.placaVeiculo}</div>}
                                                     </div>
-                                                    <h4 className="font-black text-slate-800 uppercase">{r.funcionario}</h4>
-                                                    <p className="text-[10px] font-black text-sky-600 uppercase">{r.unidade} - {r.departamento}</p>
-                                                    {r.usoVeiculo && <p className="mt-2 text-[10px] font-black bg-slate-50 p-2 rounded-lg flex items-center gap-2 uppercase tracking-widest"><div className="w-4 h-4"><Icons.Car /></div> {r.placaVeiculo}</p>}
+                                                    <button onClick={() => toggleStatus(r.id, r.status === 'solicitado' ? 'autorizado' : 'concluido')} className={`w-full py-4 rounded-xl text-white font-black text-xs uppercase transition-all active:scale-95 shadow-lg ${r.status === 'solicitado' ? 'bg-sky-500 hover:bg-sky-600' : 'bg-emerald-500 hover:bg-emerald-600'}`}>
+                                                        {r.status === 'solicitado' ? 'Confirmar Saída' : 'Registrar Chegada'}
+                                                    </button>
                                                 </div>
-                                                <button onClick={() => toggleStatus(r.id, r.status === 'solicitado' ? 'autorizado' : 'concluido')} className={`w-full py-4 rounded-xl text-white font-black text-xs uppercase transition-all active:scale-95 shadow-lg ${r.status === 'solicitado' ? 'bg-sky-500' : 'bg-emerald-500'}`}>
-                                                    {r.status === 'solicitado' ? 'Confirmar Saída' : 'Registrar Chegada'}
-                                                </button>
-                                            </div>
-                                        ))}
+                                            )) : <div className="col-span-full py-20 text-center text-slate-300 font-black uppercase text-xs tracking-[0.2em]">Sem movimentação pendente</div>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -239,72 +262,85 @@
                                 <div className="lg:col-span-3">
                                     <div className="bg-blue-950 rounded-[2.5rem] p-8 text-white sticky top-32 shadow-xl border border-white/5">
                                         <h2 className="text-xl font-black mb-6 flex items-center gap-3">
-                                            <div className="w-5 h-5"><Icons.PlusCircle /></div> NOVA ENTRADA
+                                            <div className="w-6 h-6"><Icons.PlusCircle /></div> NOVA ENTRADA
                                         </h2>
                                         <form onSubmit={handleSave} className="space-y-4">
                                             <div className="grid grid-cols-2 gap-2">
-                                                <input type="date" value={formData.dataManual} onChange={e => setFormData({...formData, dataManual: e.target.value})} className="bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
-                                                <input type="time" value={formData.horaManual} onChange={e => setFormData({...formData, horaManual: e.target.value})} className="bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
+                                                <div className="space-y-1">
+                                                    <label className="text-[9px] font-black text-blue-400 uppercase ml-1">Data</label>
+                                                    <input type="date" value={formData.dataManual} onChange={e => setFormData({...formData, dataManual: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[9px] font-black text-blue-400 uppercase ml-1">Hora</label>
+                                                    <input type="time" value={formData.horaManual} onChange={e => setFormData({...formData, horaManual: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
+                                                </div>
                                             </div>
-                                            <input required placeholder="Unidade" value={formData.unidade} onChange={e => setFormData({...formData, unidade: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
-                                            <input required placeholder="Nome Completo" value={formData.funcionario} onChange={e => setFormData({...formData, funcionario: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
-                                            <input placeholder="Departamento" value={formData.departamento} onChange={e => setFormData({...formData, departamento: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
-                                            <div className="bg-white/5 p-4 rounded-xl border border-white/5">
-                                                <label className="text-[10px] font-black flex justify-between uppercase mb-2">Veículo Empresa? <input type="checkbox" checked={formData.usoVeiculo} onChange={e => setFormData({...formData, usoVeiculo: e.target.checked})} /></label>
-                                                {formData.usoVeiculo && <input required placeholder="PLACA" value={formData.placaVeiculo} onChange={e => setFormData({...formData, placaVeiculo: e.target.value})} className="w-full bg-white text-slate-900 rounded-lg p-2 text-xs font-black outline-none" />}
+                                            <input required placeholder="Unidade / Localização" value={formData.unidade} onChange={e => setFormData({...formData, unidade: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
+                                            <input required placeholder="Nome Completo" value={formData.funcionario} onChange={e => setFormData({...formData, funcionario: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
+                                            <input placeholder="Departamento" value={formData.departamento} onChange={e => setFormData({...formData, departamento: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-xs outline-none focus:bg-white focus:text-slate-900 transition-all" />
+                                            <div className="bg-white/5 p-4 rounded-2xl border border-white/5 transition-all">
+                                                <label className="text-[10px] font-black flex justify-between uppercase mb-3 text-blue-200">Veículo Empresa? <input type="checkbox" checked={formData.usoVeiculo} onChange={e => setFormData({...formData, usoVeiculo: e.target.checked})} className="w-4 h-4 rounded border-none accent-blue-500" /></label>
+                                                {formData.usoVeiculo && <input required placeholder="INTRODUZA A PLACA" value={formData.placaVeiculo} onChange={e => setFormData({...formData, placaVeiculo: e.target.value})} className="w-full bg-white text-slate-900 rounded-xl p-3 text-xs font-black outline-none tracking-widest border-none shadow-inner" />}
                                             </div>
-                                            <button className="w-full py-4 bg-blue-600 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-500/20 active:scale-95 transition-all">Solicitar Saída</button>
+                                            <button className="w-full py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl shadow-blue-900/40 active:scale-95 transition-all mt-4">Solicitar Saída</button>
                                         </form>
                                     </div>
                                 </div>
                                 <div className="lg:col-span-9">
-                                    <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden min-h-[500px] border border-slate-200 flex flex-col">
-                                        <div className="bg-blue-950 p-6 flex justify-between items-center text-white">
+                                    <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden min-h-[600px] border border-slate-200 flex flex-col">
+                                        <div className="bg-blue-950 p-7 flex flex-col md:flex-row justify-between items-center gap-4 text-white">
                                             <h3 className="font-black flex items-center gap-3 uppercase text-sm tracking-widest"><div className="w-5 h-5"><Icons.Activity /></div> Movimentação Recente</h3>
-                                            <div className="relative w-64 text-slate-800">
-                                                <div className="absolute left-3 top-2.5 w-4 h-4 text-slate-400"><Icons.Search /></div>
-                                                <input placeholder="Pesquisar..." value={busca} onChange={e => setBusca(e.target.value)} className="w-full pl-10 p-2 text-xs rounded-xl bg-white/10 border border-white/10 text-white outline-none focus:bg-white focus:text-slate-800 transition-all" />
+                                            <div className="relative w-full md:w-80 text-slate-800">
+                                                <div className="absolute left-4 top-3 w-4 h-4 text-slate-400"><Icons.Search /></div>
+                                                <input placeholder="Pesquisar por nome, unidade..." value={busca} onChange={e => setBusca(e.target.value)} className="w-full pl-12 p-3 text-xs rounded-2xl bg-white/10 border border-white/10 text-white outline-none focus:bg-white focus:text-slate-800 transition-all shadow-inner" />
                                             </div>
                                         </div>
                                         <div className="flex-1 overflow-x-auto">
                                             <table className="w-full text-left">
                                                 <thead>
-                                                    <tr className="bg-slate-50 text-[10px] font-black text-slate-400 uppercase border-b">
-                                                        <th className="px-8 py-4">Data / Horários</th>
-                                                        <th className="px-8 py-4">Identificação</th>
-                                                        <th className="px-8 py-4">Status</th>
-                                                        <th className="px-8 py-4 text-right">Ação</th>
+                                                    <tr className="bg-slate-50 text-[10px] font-black text-slate-400 uppercase border-b tracking-widest">
+                                                        <th className="px-8 py-5">Data / Horários</th>
+                                                        <th className="px-8 py-5">Identificação</th>
+                                                        <th className="px-8 py-5 text-center">Status</th>
+                                                        <th className="px-8 py-5 text-right">Ação</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y text-sm">
-                                                    {paginados.map(r => (
-                                                        <tr key={r.id} className="hover:bg-slate-50 transition-all group">
-                                                            <td className="px-8 py-5">
-                                                                <div className="font-black uppercase">{r.status === 'solicitado' ? 'Pendente' : `${r.horarioSaida} > ${r.horarioRetorno || '--:--'}`}</div>
+                                                    {paginados.length > 0 ? paginados.map(r => (
+                                                        <tr key={r.id} className="hover:bg-slate-50/80 transition-all group">
+                                                            <td className="px-8 py-6">
+                                                                <div className="font-black uppercase text-slate-800">{r.status === 'solicitado' ? 'Pendente' : `${r.horarioSaida} > ${r.horarioRetorno || '--:--'}`}</div>
                                                                 <div className="text-[10px] text-slate-400 font-bold">{r.data}</div>
                                                             </td>
-                                                            <td className="px-8 py-5">
-                                                                <div className="font-black uppercase">{r.funcionario}</div>
-                                                                <div className="text-[10px] text-blue-900 font-black opacity-60 uppercase">{r.unidade}</div>
+                                                            <td className="px-8 py-6">
+                                                                <div className="font-black uppercase text-slate-900">{r.funcionario}</div>
+                                                                <div className="text-[10px] text-blue-900 font-black opacity-60 uppercase flex items-center gap-1"><div className="w-3 h-3"><Icons.MapPin /></div> {r.unidade}</div>
                                                             </td>
-                                                            <td className="px-8 py-5">
-                                                                <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${r.status === 'solicitado' ? 'bg-amber-100 text-amber-600' : r.status === 'autorizado' ? 'bg-sky-100 text-sky-600' : 'bg-slate-100 text-slate-400'}`}>
+                                                            <td className="px-8 py-6 text-center">
+                                                                <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${r.status === 'solicitado' ? 'bg-amber-50 text-amber-600 border-amber-100' : r.status === 'autorizado' ? 'bg-sky-50 text-sky-600 border-sky-100' : 'bg-slate-50 text-slate-400 border-slate-200'}`}>
                                                                     {r.status}
                                                                 </span>
                                                             </td>
-                                                            <td className="px-8 py-5 text-right">
-                                                                <button onClick={() => setRegistros(registros.filter(x => x.id !== r.id))} className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all w-8 h-8"><Icons.Trash /></button>
+                                                            <td className="px-8 py-6 text-right">
+                                                                <button onClick={() => setRegistros(registros.filter(x => x.id !== r.id))} className="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all w-8 h-8 p-1.5 rounded-lg hover:bg-red-50"><Icons.Trash /></button>
                                                             </td>
                                                         </tr>
-                                                    ))}
+                                                    )) : (
+                                                        <tr>
+                                                            <td colSpan="4" className="py-20 text-center text-slate-300 uppercase text-xs font-black tracking-widest">Nenhum registo encontrado</td>
+                                                        </tr>
+                                                    )}
                                                 </tbody>
                                             </table>
                                         </div>
                                         {totalPaginas > 1 && (
-                                            <div className="p-4 bg-slate-50 border-t flex justify-between items-center text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                                <button disabled={paginaAtual === 1} onClick={() => setPaginaAtual(p => p - 1)} className="px-4 py-2 bg-white border rounded-lg disabled:opacity-30">Anterior</button>
-                                                <span>Página {paginaAtual} de {totalPaginas}</span>
-                                                <button disabled={paginaAtual === totalPaginas} onClick={() => setPaginaAtual(p => p + 1)} className="px-4 py-2 bg-white border rounded-lg disabled:opacity-30">Próxima</button>
+                                            <div className="p-6 bg-slate-50 border-t flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                                <div className="flex items-center gap-3">
+                                                    <button disabled={paginaAtual === 1} onClick={() => setPaginaAtual(p => p - 1)} className="px-5 py-2.5 bg-white border border-slate-200 rounded-xl disabled:opacity-30 hover:bg-slate-100 transition-colors shadow-sm">Anterior</button>
+                                                    <span className="bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-inner">Página {paginaAtual} de {totalPaginas}</span>
+                                                    <button disabled={paginaAtual === totalPaginas} onClick={() => setPaginaAtual(p => p + 1)} className="px-5 py-2.5 bg-white border border-slate-200 rounded-xl disabled:opacity-30 hover:bg-slate-100 transition-colors shadow-sm">Próxima</button>
+                                                </div>
+                                                <div className="opacity-50">Total de {filtradosTotal.length} movimentos</div>
                                             </div>
                                         )}
                                     </div>
@@ -314,67 +350,71 @@
 
                         {view === 'relatorio' && (
                             <div className="space-y-8 pb-10">
-                                <div className="bg-white p-8 rounded-[2rem] shadow-xl flex justify-between items-center no-print border border-slate-200">
-                                    <div className="flex items-center gap-4">
-                                        <div className="bg-blue-950 p-4 rounded-2xl text-white shadow-lg shadow-blue-900/20"><Icons.Dashboard /></div>
+                                <div className="bg-white p-8 rounded-[2.5rem] shadow-xl flex flex-col md:flex-row justify-between items-center no-print border border-slate-200 gap-6">
+                                    <div className="flex items-center gap-5">
+                                        <div className="bg-blue-950 p-4 rounded-[1.5rem] text-white shadow-lg shadow-blue-950/20 w-16 h-16"><Icons.Dashboard /></div>
                                         <div>
-                                            <h2 className="text-xl font-black uppercase">Estatísticas Operacionais</h2>
-                                            <p className="text-xs text-slate-400 font-bold opacity-80 uppercase tracking-widest">Mês {mesFiltro} / Ano {anoFiltro}</p>
+                                            <h2 className="text-xl font-black uppercase leading-tight">Estatísticas Operacionais</h2>
+                                            <p className="text-xs text-slate-400 font-bold opacity-80 uppercase tracking-widest">Mês {mesFiltro} — Ano {anoFiltro}</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-2 bg-slate-100 p-2 rounded-2xl border">
-                                        <select value={mesFiltro} onChange={e => setMesFiltro(e.target.value)} className="bg-transparent font-black text-xs outline-none px-4">
+                                    <div className="flex gap-2 bg-slate-100 p-2.5 rounded-2xl border border-slate-200 shadow-inner">
+                                        <select value={mesFiltro} onChange={e => setMesFiltro(e.target.value)} className="bg-transparent font-black text-xs outline-none px-5 cursor-pointer">
                                             {['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map((m, i) => <option key={i} value={i+1}>{m}</option>)}
                                         </select>
-                                        <select value={anoFiltro} onChange={e => setAnoFiltro(e.target.value)} className="bg-transparent font-black text-xs outline-none px-4 border-l">
-                                            {[2024, 2025, 2026].map(y => <option key={y} value={y}>{y}</option>)}
+                                        <select value={anoFiltro} onChange={e => setAnoFiltro(e.target.value)} className="bg-transparent font-black text-xs outline-none px-5 border-l border-slate-300 cursor-pointer">
+                                            {[2024, 2025, 2026, 2027].map(y => <option key={y} value={y}>{y}</option>)}
                                         </select>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                    <div className="bg-blue-50 p-8 rounded-[2rem] border border-blue-100">
-                                        <h3 className="text-4xl font-black mb-1">{stats.total}</h3>
-                                        <p className="text-[10px] font-black opacity-50 uppercase tracking-widest">Movimentos no Mês</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+                                    <div className="bg-blue-50 p-8 rounded-[2.5rem] border border-blue-100 shadow-sm flex flex-col justify-center h-full">
+                                        <h3 className="text-4xl font-black mb-1 text-blue-900">{stats.total}</h3>
+                                        <p className="text-[10px] font-black opacity-50 uppercase tracking-widest">Mês Selecionado</p>
                                     </div>
-                                    <div className="bg-amber-50 p-8 rounded-[2rem] border border-amber-100">
-                                        <h3 className="text-4xl font-black mb-1">{stats.ativos}</h3>
-                                        <p className="text-[10px] font-black opacity-50 uppercase tracking-widest">Em Aberto</p>
+                                    <div className="bg-amber-50 p-8 rounded-[2.5rem] border border-amber-100 shadow-sm flex flex-col justify-center h-full">
+                                        <h3 className="text-4xl font-black mb-1 text-amber-600">{stats.ativos}</h3>
+                                        <p className="text-[10px] font-black opacity-50 uppercase tracking-widest">Em Trânsito</p>
                                     </div>
-                                    <div className="bg-emerald-50 p-8 rounded-[2rem] border border-emerald-100">
-                                        <h3 className="text-4xl font-black mb-1">{registros.filter(r => r.data === hojeBR).length}</h3>
+                                    <div className="bg-emerald-50 p-8 rounded-[2.5rem] border border-emerald-100 shadow-sm flex flex-col justify-center h-full">
+                                        <h3 className="text-4xl font-black mb-1 text-emerald-600">{registros.filter(r => r.data === hojeBR).length}</h3>
                                         <p className="text-[10px] font-black opacity-50 uppercase tracking-widest">Total Hoje</p>
                                     </div>
-                                    <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
-                                        <h3 className="text-4xl font-black mb-1">{registros.length}</h3>
-                                        <p className="text-[10px] font-black opacity-50 uppercase tracking-widest">Base Geral</p>
+                                    <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col justify-center h-full">
+                                        <h3 className="text-4xl font-black mb-1 text-slate-700">{registros.length}</h3>
+                                        <p className="text-[10px] font-black opacity-50 uppercase tracking-widest">Base de Dados</p>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-200">
-                                        <h3 className="text-xs font-black uppercase text-slate-400 mb-8 flex items-center gap-3 tracking-widest">
-                                            <div className="w-4 h-4"><Icons.MapPin /></div> Fluxo por Unidade
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                                    <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-200 flex flex-col h-full">
+                                        <h3 className="text-xs font-black uppercase text-slate-400 mb-10 flex items-center gap-3 tracking-[0.2em]">
+                                            <div className="w-5 h-5 text-blue-600"><Icons.MapPin /></div> Fluxo por Unidade
                                         </h3>
-                                        <div className="space-y-6">
-                                            {stats.topUnidades.map(([n, c], i) => (
-                                                <div key={i}>
-                                                    <div className="flex justify-between font-black text-xs uppercase mb-2"><span>{n}</span><span className="text-blue-900">{c}</span></div>
-                                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                                        <div className="h-full bg-blue-600 rounded-full" style={{ width: `${(c/stats.total)*100}%` }}></div>
+                                        <div className="space-y-7 flex-1">
+                                            {stats.topUnidades.length > 0 ? stats.topUnidades.map(([n, c], i) => (
+                                                <div key={i} className="group">
+                                                    <div className="flex justify-between font-black text-[11px] uppercase mb-2 tracking-tight">
+                                                        <span className="text-slate-700">{n}</span>
+                                                        <span className="text-blue-900 bg-blue-50 px-3 py-1 rounded-lg">{c}</span>
+                                                    </div>
+                                                    <div className="h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                                                        <div className="h-full bg-blue-600 rounded-full transition-all duration-700" style={{ width: `${(c/Math.max(stats.total, 1))*100}%` }}></div>
                                                     </div>
                                                 </div>
-                                            ))}
+                                            )) : <div className="py-10 text-center opacity-30 uppercase font-black text-xs tracking-widest">Sem dados para o gráfico</div>}
                                         </div>
                                     </div>
-                                    <div className="bg-blue-950 p-8 rounded-[2.5rem] text-white flex flex-col justify-between shadow-2xl relative overflow-hidden print:hidden">
+                                    <div className="bg-blue-950 p-10 rounded-[2.5rem] text-white flex flex-col justify-between shadow-2xl relative overflow-hidden print:hidden border border-white/5 h-full">
                                         <div className="relative z-10">
-                                            <h3 className="text-xs font-black text-blue-300 uppercase tracking-widest mb-2 flex items-center gap-2">DIAGNÓSTICO MENSAL</h3>
-                                            <p className="text-sm font-black opacity-80 uppercase leading-snug">Total de {stats.total} movimentos auditados em {mesFiltro}/{anoFiltro}. Tudo em conformidade.</p>
+                                            <div className="w-14 h-14 bg-white/10 p-3 rounded-2xl border border-white/10 mb-6"><Icons.Shield /></div>
+                                            <h3 className="text-xs font-black text-blue-400 uppercase tracking-[0.3em] mb-3">Auditoria Mensal</h3>
+                                            <p className="text-lg font-black uppercase tracking-tighter leading-tight max-w-sm mb-4">Total de {stats.total} movimentos auditados em {mesFiltro}/{anoFiltro}. Sistema em conformidade total.</p>
                                         </div>
-                                        <div className="flex gap-4 mt-8 relative z-10">
-                                            <button onClick={() => window.print()} className="flex-1 py-4 bg-white/10 rounded-2xl border border-white/10 font-black text-[10px] uppercase tracking-widest hover:bg-white/20 transition-all">Imprimir</button>
-                                            <button onClick={exportar} className="flex-[1.5] py-4 bg-blue-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-blue-500/30 hover:bg-blue-500 transition-all">Exportar Dados</button>
+                                        <div className="flex flex-col sm:flex-row gap-4 relative z-10 mt-auto">
+                                            <button onClick={() => window.print()} className="flex-1 py-5 bg-white/10 rounded-2xl border border-white/10 font-black text-[10px] uppercase tracking-widest hover:bg-white/20 transition-all active:scale-95 flex items-center justify-center gap-2">IMPRIMIR</button>
+                                            <button onClick={exportar} className="flex-[1.5] py-5 bg-blue-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-blue-500/30 hover:bg-blue-500 transition-all active:scale-95 flex items-center justify-center gap-2">EXPORTAR DADOS (CSV)</button>
                                         </div>
                                     </div>
                                 </div>
@@ -382,7 +422,9 @@
                         )}
                     </main>
 
-                    <footer className="text-center py-10 opacity-30 text-[10px] font-black uppercase tracking-[0.4em] no-print">Control Gateway v5.3 • Portaria Digital</footer>
+                    <footer className="text-center py-12 opacity-30 text-[9px] font-black uppercase tracking-[0.5em] no-print text-slate-500">
+                        Control Gateway v5.3 • Portaria Digital Automática
+                    </footer>
                 </div>
             );
         };
