@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Portaria Digital - Compliance Mobile</title>
+    <title>Portaria Digital - MONITORAMENTO</title>
     
     <!-- Scripts Necessários -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -60,7 +60,7 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            padding-bottom: calc(95px + env(safe-area-inset-bottom));
+            padding-bottom: calc(105px + env(safe-area-inset-bottom));
         }
         .scroll-content::-webkit-scrollbar { display: none; }
 
@@ -124,30 +124,20 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .nav-icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-            animation: marquee 25s linear infinite;
-        }
-
-        input, select {
+        input, select, textarea {
             border: 1px solid #e2e8f0 !important;
-            border-radius: 16px !important;
+            border-radius: 12px !important;
             background-color: #f8fafc !important;
-            font-size: 16px !important;
+            font-size: 14px !important;
+            width: 100%;
+            padding: 12px;
         }
         
-        input:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: var(--grena) !important;
             background-color: #ffffff !important;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.05);
         }
 
         .btn-primary {
@@ -170,49 +160,59 @@
         const { useState, useEffect, useMemo } = React;
 
         const Icons = {
-            Shield: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>,
-            User: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-            Briefcase: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
-            Bell: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
-            Plus: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>,
-            MapPin: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>,
-            Trash: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>,
-            Car: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.7 0-1.3.3-1.8.7C2.3 8.6 1 10 1 10s-2.7.6-4.5 1.1c-.8.2-1.5 1-1.5 1.9v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>,
-            Clipboard: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/></svg>,
-            CheckSquare: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
-            Download: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-            Search: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Shield: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>,
+            User: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+            Briefcase: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
+            Bell: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
+            Plus: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>,
+            CheckSquare: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
+            Clipboard: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/></svg>,
+            Download: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+            Trash: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>,
+            Car: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.7 0-1.3.3-1.8.7C2.3 8.6 1 10 1 10s-2.7.6-4.5 1.1c-.8.2-1.5 1-1.5 1.9v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
         };
 
         const App = () => {
             const [registros, setRegistros] = useState(() => {
-                const saved = localStorage.getItem('portaria_compliance_audit_v2');
+                const saved = localStorage.getItem('portaria_compliance_audit_v4');
                 return saved ? JSON.parse(saved) : [];
             });
 
             const [view, setView] = useState('registros');
-            const [formData, setFormData] = useState({ 
-                tipo: 'funcionario', funcionario: '', unidade: '', departamento: '', usoVeiculo: false, placaVeiculo: '', aprovador: '' 
-            });
+            
+            const initialFormState = { 
+                tipo: 'funcionario', 
+                data: new Date().toLocaleDateString('pt-BR'),
+                aprovador: '',
+                motivo: '',
+                
+                // Funcionário
+                funcionario: '', 
+                departamento: '', 
+                tipoRegistro: 'Saída', 
+                usoVeiculo: false, 
+                placaVeiculo: '',
+                
+                // Visitante
+                empresa: '',
+                cargo: 'Consultor', 
+                documento: '',
+                telefone: '',
+                pessoaVisitada: '',
+                crachaEntregue: false,
+                observacoes: ''
+            };
+
+            const [formData, setFormData] = useState(initialFormState);
 
             useEffect(() => {
-                localStorage.setItem('portaria_compliance_audit_v2', JSON.stringify(registros));
+                localStorage.setItem('portaria_compliance_audit_v4', JSON.stringify(registros));
             }, [registros]);
 
             const stats = useMemo(() => {
                 const pendentesAprovacao = registros.filter(r => r.status === 'pendente').length;
-                const aguardandoPortaria = registros.filter(r => r.status === 'solicitado').length;
                 const emTransito = registros.filter(r => r.status === 'autorizado').length;
-                const uMap = {};
-                registros.forEach(r => uMap[r.unidade] = (uMap[r.unidade] || 0) + 1);
-                
-                return { 
-                    total: registros.length, 
-                    pendentesAprovacao,
-                    aguardandoPortaria,
-                    emTransito,
-                    topUnidades: Object.entries(uMap).sort((a,b) => b[1]-a[1]).slice(0,3) 
-                };
+                return { total: registros.length, pendentesAprovacao, emTransito };
             }, [registros]);
 
             const handleSave = (e) => {
@@ -221,15 +221,16 @@
                 const novo = { 
                     id: Date.now(), 
                     ...formData, 
-                    status: 'pendente', // Agora começa como pendente para aprovação
+                    status: 'pendente', 
                     data: agora.toLocaleDateString('pt-BR'), 
                     horaSolicitacao: agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}),
                     horarioSaida: null, 
-                    horarioRetorno: null 
+                    horarioEntrada: null,
+                    horarioFinal: null 
                 };
                 setRegistros([novo, ...registros]);
-                setFormData({ tipo: 'funcionario', funcionario: '', unidade: '', departamento: '', usoVeiculo: false, placaVeiculo: '', aprovador: '' });
-                setView('aprovacoes'); // Direciona para a aba de aprovações
+                setFormData(initialFormState);
+                setView('aprovacoes');
             };
 
             const mudarStatus = (id, status) => {
@@ -237,22 +238,39 @@
                 setRegistros(registros.map(r => r.id === id ? { 
                     ...r, 
                     status, 
-                    horarioSaida: status === 'autorizado' ? hora : r.horarioSaida,
-                    horarioRetorno: status === 'concluido' ? hora : r.horarioRetorno
+                    horarioSaida: status === 'autorizado' && r.tipo === 'funcionario' ? hora : r.horarioSaida,
+                    horarioEntrada: status === 'autorizado' && r.tipo === 'visitante' ? hora : r.horarioEntrada,
+                    horarioFinal: status === 'concluido' ? hora : r.horarioFinal
                 } : r));
+            };
+
+            const exportarDados = () => {
+                const cabecalho = "Data;Tipo;Nome;Unidade/Empresa;Status;Autorizado Por;Solicitacao;Saida;Entrada;Fim;Placa;Documento;Cracha\n";
+                const linhas = registros.map(r => 
+                    `${r.data};${r.tipo.toUpperCase()};${r.funcionario};${r.empresa || r.departamento};${r.status.toUpperCase()};${r.aprovador};${r.horaSolicitacao || '-'};${r.horarioSaida || '-'};${r.horarioEntrada || '-'};${r.horarioFinal || '-'};${r.placaVeiculo || '-'};${r.documento || '-'};${r.crachaEntregue ? 'SIM' : 'NÃO'}`
+                ).join("\n");
+                
+                const blob = new Blob(["\ufeff" + cabecalho + linhas], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("download", `monitoramento_tiangua_${new Date().getTime()}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             };
 
             return (
                 <div className="app-container">
                     
-                    {/* Header Adaptável */}
+                    {/* Header MONITORAMENTO */}
                     <header className="app-header px-6 pb-6 shadow-md z-50 shrink-0">
                         <div className="flex justify-between items-center py-4">
                             <div className="flex items-center gap-3">
-                                <div className="w-6 h-6"><Icons.Shield /></div>
-                                <span className="font-black text-[11px] tracking-[0.2em] uppercase">Auditoria de Fluxo</span>
+                                <Icons.Shield />
+                                <span className="font-black text-[13px] tracking-[0.3em] uppercase">MONITORAMENTO</span>
                             </div>
-                            <div className="w-5 h-5 opacity-60"><Icons.Bell /></div>
+                            <div className="opacity-40"><Icons.Bell /></div>
                         </div>
                     </header>
 
@@ -265,38 +283,105 @@
                                 <div className="space-y-6">
                                     <div className="space-y-1">
                                         <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">
-                                            {formData.tipo === 'funcionario' ? 'Solicitar Saída' : 'Registrar Visita'}
+                                            {formData.tipo === 'funcionario' ? 'Controle de Funcionários' : 'Controle de Visitantes'}
                                         </h2>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                                            Compliance & Segurança de Tianguá
+                                            {formData.tipo === 'funcionario' ? 'Entrada, Saída e Intervalos' : 'Consultores, Representantes e Empresários'}
                                         </p>
                                     </div>
                                     
                                     <form onSubmit={handleSave} className="space-y-5">
                                         <div className="flex bg-slate-100 p-1.5 rounded-[20px] border border-slate-200">
-                                            <button type="button" onClick={()=>setFormData({...formData, tipo: 'funcionario'})} className={`flex-1 py-3.5 rounded-[16px] text-[10px] font-black uppercase transition-all ${formData.tipo==='funcionario'?'bg-white text-grena shadow-sm':'text-slate-400'}`}>Colaborador</button>
+                                            <button type="button" onClick={()=>setFormData({...formData, tipo: 'funcionario'})} className={`flex-1 py-3.5 rounded-[16px] text-[10px] font-black uppercase transition-all ${formData.tipo==='funcionario'?'bg-white text-grena shadow-sm':'text-slate-400'}`}>Funcionário</button>
                                             <button type="button" onClick={()=>setFormData({...formData, tipo: 'visitante'})} className={`flex-1 py-3.5 rounded-[16px] text-[10px] font-black uppercase transition-all ${formData.tipo==='visitante'?'bg-white text-grena shadow-sm':'text-slate-400'}`}>Visitante</button>
                                         </div>
 
-                                        <div className="space-y-4 pt-2">
-                                            <div className="space-y-1.5">
-                                                <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Identificação</label>
-                                                <input required placeholder="NOME COMPLETO" value={formData.funcionario} onChange={e=>setFormData({...formData, funcionario: e.target.value})} className="w-full p-4.5 text-xs font-bold uppercase shadow-sm" />
+                                        <div className="space-y-4">
+                                            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-inner">
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Data do Registro</span>
+                                                <span className="text-[12px] font-black text-grena uppercase">{formData.data} - Automática</span>
                                             </div>
 
-                                            <div className="space-y-1.5">
-                                                <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Unidade</label>
-                                                <input required placeholder="LOCALIZAÇÃO / FILIAL" value={formData.unidade} onChange={e=>setFormData({...formData, unidade: e.target.value})} className="w-full p-4.5 text-xs font-bold uppercase shadow-sm" />
-                                            </div>
+                                            {formData.tipo === 'funcionario' ? (
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Nome do Funcionário</label>
+                                                        <input required placeholder="IDENTIFICAÇÃO COMPLETA" value={formData.funcionario} onChange={e=>setFormData({...formData, funcionario: e.target.value})} className="uppercase" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Setor / Departamento</label>
+                                                        <input required placeholder="EX: PRODUÇÃO, ADM" value={formData.departamento} onChange={e=>setFormData({...formData, departamento: e.target.value})} className="uppercase" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Tipo de Registro</label>
+                                                        <select value={formData.tipoRegistro} onChange={e=>setFormData({...formData, tipoRegistro: e.target.value})}>
+                                                            <option>Entrada</option>
+                                                            <option>Saída</option>
+                                                            <option>Intervalo</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Motivo (em caso de saída durante expediente)</label>
+                                                        <input placeholder="DESCREVA O MOTIVO" value={formData.motivo} onChange={e=>setFormData({...formData, motivo: e.target.value})} className="uppercase" />
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Nome Completo</label>
+                                                        <input required placeholder="NOME DO VISITANTE" value={formData.funcionario} onChange={e=>setFormData({...formData, funcionario: e.target.value})} className="uppercase" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Empresa</label>
+                                                        <input required placeholder="EMPRESA REPRESENTADA" value={formData.empresa} onChange={e=>setFormData({...formData, empresa: e.target.value})} className="uppercase" />
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        <div>
+                                                            <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Cargo</label>
+                                                            <select value={formData.cargo} onChange={e=>setFormData({...formData, cargo: e.target.value})}>
+                                                                <option>Consultor</option>
+                                                                <option>Representante</option>
+                                                                <option>Empresário</option>
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Documento (RG/CPF)</label>
+                                                            <input required placeholder="DOCUMENTO" value={formData.documento} onChange={e=>setFormData({...formData, documento: e.target.value})} />
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        <div>
+                                                            <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Telefone</label>
+                                                            <input required placeholder="(00) 00000-0000" value={formData.telefone} onChange={e=>setFormData({...formData, telefone: e.target.value})} />
+                                                        </div>
+                                                        <div>
+                                                            <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Pessoa / Setor Visitado</label>
+                                                            <input required placeholder="CONTATO INTERNO" value={formData.pessoaVisitada} onChange={e=>setFormData({...formData, pessoaVisitada: e.target.value})} className="uppercase" />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Motivo da Visita</label>
+                                                        <input required placeholder="EX: REUNIÃO, MANUTENÇÃO" value={formData.motivo} onChange={e=>setFormData({...formData, motivo: e.target.value})} className="uppercase" />
+                                                    </div>
+                                                    <div className="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-slate-100">
+                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Crachá Entregue?</span>
+                                                        <input type="checkbox" checked={formData.crachaEntregue} onChange={e=>setFormData({...formData, crachaEntregue: e.target.checked})} className="w-6 h-6 accent-grena" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Observações</label>
+                                                        <textarea rows="2" placeholder="INFORMAÇÕES ADICIONAIS" value={formData.observacoes} onChange={e=>setFormData({...formData, observacoes: e.target.value})} className="uppercase" />
+                                                    </div>
+                                                </div>
+                                            )}
 
-                                            <div className="space-y-1.5">
-                                                <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Aprovador Responsável</label>
-                                                <input required placeholder="NOME DO GESTOR" value={formData.aprovador} onChange={e=>setFormData({...formData, aprovador: e.target.value})} className="w-full p-4.5 text-xs font-bold uppercase shadow-sm" />
+                                            <div>
+                                                <label className="text-[9px] font-black text-slate-400 uppercase ml-1 tracking-widest">Autorizado por (Responsável)</label>
+                                                <input required placeholder="NOME DO RESPONSÁVEL" value={formData.aprovador} onChange={e=>setFormData({...formData, aprovador: e.target.value})} className="uppercase" />
                                             </div>
 
                                             {formData.tipo === 'funcionario' && (
                                                 <div className="bg-slate-50 p-5 rounded-[24px] border border-slate-100">
-                                                    <label className="text-[10px] font-black flex justify-between uppercase text-slate-500 items-center tracking-widest">Uso de Veículo? <input type="checkbox" checked={formData.usoVeiculo} onChange={e=>setFormData({...formData, usoVeiculo: e.target.checked})} className="w-6 h-6 accent-grena cursor-pointer" /></label>
+                                                    <label className="text-[10px] font-black flex justify-between uppercase text-slate-500 items-center tracking-widest">Veículo da Frota? <input type="checkbox" checked={formData.usoVeiculo} onChange={e=>setFormData({...formData, usoVeiculo: e.target.checked})} className="w-6 h-6 accent-grena" /></label>
                                                     {formData.usoVeiculo && (
                                                         <input required placeholder="PLACA DO VEÍCULO" value={formData.placaVeiculo} onChange={e=>setFormData({...formData, placaVeiculo: e.target.value})} className="w-full mt-4 bg-white p-4.5 rounded-xl text-xs font-black shadow-sm uppercase tracking-widest text-grena border-none" />
                                                     )}
@@ -305,25 +390,25 @@
                                         </div>
 
                                         <button className="w-full py-5 bg-grena text-white btn-primary shadow-xl shadow-red-900/20 active:scale-95 transition-all mt-4 text-[11px]">
-                                            Enviar para Aprovação
+                                            Registrar Solicitação
                                         </button>
                                     </form>
                                 </div>
                             )}
 
-                            {/* VIEW: APROVAÇÕES (NOVA ABA) */}
+                            {/* VIEW: APROVAÇÕES */}
                             {view === 'aprovacoes' && (
                                 <div className="space-y-5">
                                     <div className="space-y-1">
-                                        <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Gestão de Aprovações</h2>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Validação de Solicitações Pendentes</p>
+                                        <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Aprovações</h2>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Pendentes de Validação</p>
                                     </div>
 
                                     <div className="space-y-4">
                                         {registros.filter(r => r.status === 'pendente').length > 0 ? registros.filter(r => r.status === 'pendente').map(r => (
                                             <div key={r.id} className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-md border-l-[6px] border-l-amber-400 transition-all">
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <div className="bg-amber-50 text-amber-600 p-3.5 rounded-2xl w-14 h-14 flex items-center justify-center">
+                                                    <div className="bg-amber-50 text-amber-600 p-3.5 rounded-2xl w-12 h-12 flex items-center justify-center">
                                                         <Icons.CheckSquare />
                                                     </div>
                                                     <div className="text-right">
@@ -332,45 +417,46 @@
                                                     </div>
                                                 </div>
                                                 <div className="mb-6">
-                                                    <h4 className="font-black text-slate-800 uppercase text-lg leading-tight mb-1">{r.funcionario}</h4>
-                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{r.unidade}</p>
+                                                    <h4 className="font-black text-slate-800 uppercase text-lg leading-tight mb-1 truncate">{r.funcionario}</h4>
+                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{r.tipo === 'funcionario' ? r.departamento : `Empresa: ${r.empresa}`}</p>
+                                                    <p className="text-[9px] font-black text-grena mt-2 uppercase">Motivo: {r.motivo || 'N/A'}</p>
                                                     <div className="mt-4 p-3 bg-slate-50 rounded-xl">
-                                                        <p className="text-[7px] font-black text-slate-300 uppercase mb-1">Aprovador Designado</p>
+                                                        <p className="text-[7px] font-black text-slate-300 uppercase mb-1">Autorizado por</p>
                                                         <p className="text-[10px] font-black text-slate-600 uppercase">{r.aprovador}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex gap-3">
-                                                    <button onClick={() => mudarStatus(r.id, 'solicitado')} className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-emerald-900/10 active:scale-95 transition-all">Aprovar</button>
+                                                    <button onClick={() => mudarStatus(r.id, 'solicitado')} className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all">Aprovar</button>
                                                     <button onClick={() => setRegistros(registros.filter(x => x.id !== r.id))} className="px-6 py-4 bg-slate-100 text-slate-400 rounded-2xl font-black uppercase text-[10px] active:scale-95 transition-all"><Icons.Trash /></button>
                                                 </div>
                                             </div>
                                         )) : (
                                             <div className="text-center py-24 opacity-20">
                                                 <div className="w-12 h-12 mx-auto"><Icons.Shield /></div>
-                                                <p className="text-[10px] font-black uppercase tracking-[0.4em] mt-6">Nenhuma Aprovação Pendente</p>
+                                                <p className="text-[10px] font-black uppercase tracking-[0.4em] mt-6">Nenhuma Pendência</p>
                                             </div>
                                         )}
                                     </div>
                                 </div>
                             )}
 
-                            {/* VIEW: FLUXO (PORTARIA) */}
+                            {/* VIEW: PORTARIA */}
                             {view === 'portaria' && (
                                 <div className="space-y-5">
                                     <div className="flex justify-between items-end mb-2">
                                         <div className="space-y-1">
-                                            <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Fluxo Portaria</h2>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Liberados para Movimentação</p>
+                                            <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Portaria</h2>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Efetivação de Fluxo</p>
                                         </div>
-                                        <div className="flex gap-4 bg-slate-50 p-2 rounded-2xl border border-slate-100 shadow-inner">
-                                            <div className="text-center px-2"><span className="text-lg font-black block leading-none text-grena">{stats.emTransito}</span><p className="text-[6px] font-black text-slate-400 uppercase">Trânsito</p></div>
+                                        <div className="bg-slate-50 p-2 rounded-2xl border border-slate-100 shadow-inner">
+                                            <div className="text-center px-2"><span className="text-lg font-black block leading-none text-grena">{stats.emTransito}</span><p className="text-[6px] font-black text-slate-400 uppercase">Ativos</p></div>
                                         </div>
                                     </div>
                                     
                                     <div className="bg-grena/5 py-3.5 px-6 -mx-5 overflow-hidden border-y border-grena/10">
                                         <div className="animate-marquee whitespace-nowrap text-[10px] font-black text-grena uppercase flex gap-10">
                                             {registros.filter(r=>r.status==='autorizado').map((r,i)=><span key={i}>● {r.funcionario}</span>)}
-                                            {registros.filter(r=>r.status==='autorizado').length === 0 && <span>Monitoramento Ativo ● Aguardando Fluxo</span>}
+                                            {registros.filter(r=>r.status==='autorizado').length === 0 && <span>Aguardando Monitoramento...</span>}
                                         </div>
                                     </div>
 
@@ -378,71 +464,77 @@
                                         {registros.filter(r=>['solicitado', 'autorizado'].includes(r.status)).map(r => (
                                             <div key={r.id} className="bg-white border border-slate-100 rounded-[28px] p-6 shadow-md card-grena transition-all">
                                                 <div className="flex justify-between items-start mb-5">
-                                                    <div className={`p-3.5 rounded-2xl w-14 h-14 flex items-center justify-center shadow-sm ${r.tipo === 'visitante' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-grena'}`}>
+                                                    <div className={`p-3.5 rounded-2xl w-12 h-12 flex items-center justify-center shadow-sm ${r.tipo === 'visitante' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-grena'}`}>
                                                         {r.tipo === 'funcionario' ? <Icons.User /> : <Icons.Briefcase />}
                                                     </div>
                                                     <div className="text-right">
-                                                        <span className={`text-[8px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-tighter ${r.status==='solicitado'?'bg-emerald-50 text-emerald-600' : 'bg-grena text-white shadow-lg'}`}>{r.status === 'solicitado' ? 'Liberado' : 'Em Trânsito'}</span>
+                                                        <span className={`text-[8px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-tighter ${r.status==='solicitado'?'bg-emerald-50 text-emerald-600' : 'bg-grena text-white shadow-lg'}`}>{r.status === 'solicitado' ? 'Aprovado' : 'Monitorado'}</span>
                                                         <p className="text-[10px] font-bold text-slate-400 mt-2.5 uppercase tracking-widest">{r.horaSolicitacao}</p>
                                                     </div>
                                                 </div>
                                                 <div className="mb-6">
-                                                    <h4 className="font-black text-slate-800 uppercase text-lg leading-tight mb-1.5">{r.funcionario}</h4>
-                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{r.unidade} — {r.aprovador}</p>
-                                                    {r.usoVeiculo && <div className="mt-4 text-[10px] font-black bg-slate-50 border border-slate-100 p-3.5 rounded-2xl flex items-center gap-2 text-slate-600 uppercase tracking-widest"><Icons.Car /> PLACA: {r.placaVeiculo}</div>}
+                                                    <h4 className="font-black text-slate-800 uppercase text-lg leading-tight mb-1.5 truncate">{r.funcionario}</h4>
+                                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{r.tipo === 'funcionario' ? r.departamento : r.empresa}</p>
+                                                    
+                                                    {r.status === 'autorizado' && (
+                                                        <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                                            <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Início (Confirmado)</p>
+                                                            <p className="text-[12px] font-black text-grena">{r.tipo === 'funcionario' ? r.horarioSaida : r.horarioEntrada}</p>
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 
                                                 <button onClick={() => mudarStatus(r.id, r.status === 'solicitado' ? 'autorizado' : 'concluido')} className={`w-full py-5 rounded-[20px] text-white btn-primary shadow-xl active:scale-95 transition-all text-[11px] ${r.status==='solicitado'?'bg-grena':'bg-slate-900'}`}>
-                                                    {r.status === 'solicitado' ? 'Efetivar Saída' : 'Registrar Chegada'}
+                                                    {r.status === 'solicitado' ? (r.tipo === 'funcionario' ? 'Confirmar Saída' : 'Confirmar Entrada') : 'Registrar Retorno/Fim'}
                                                 </button>
                                             </div>
                                         ))}
                                         {registros.filter(r=>['solicitado', 'autorizado'].includes(r.status)).length === 0 && (
                                             <div className="text-center py-24 opacity-20">
                                                 <div className="w-12 h-12 mx-auto"><Icons.Shield /></div>
-                                                <p className="text-[10px] font-black uppercase tracking-[0.4em] mt-6">Aguardando Aprovações</p>
+                                                <p className="text-[10px] font-black uppercase tracking-[0.4em] mt-6">Sem Movimentações Ativas</p>
                                             </div>
                                         )}
                                     </div>
                                 </div>
                             )}
 
-                            {/* VIEW: PAINEL AUDITOR */}
+                            {/* VIEW: PAINEL */}
                             {view === 'relatorio' && (
                                 <div className="space-y-6">
                                     <div className="space-y-1">
-                                        <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Painel Auditor</h2>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Conformidade e Ciclo de Dados</p>
+                                        <h2 className="text-2xl font-black text-slate-800 tracking-tighter uppercase leading-none">Painel</h2>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Auditoria de Dados</p>
                                     </div>
                                     
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="bg-white p-6 rounded-[28px] border border-slate-100 shadow-md flex flex-col justify-center">
-                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Conformidade</p>
+                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Acuracidade</p>
                                             <h3 className="text-3xl font-black text-slate-800 tracking-tighter">100%</h3>
                                         </div>
                                         <div className="bg-white p-6 rounded-[28px] border border-slate-100 shadow-md flex flex-col justify-center">
-                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Total Ciclo</p>
+                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Base Total</p>
                                             <h3 className="text-3xl font-black text-slate-800 tracking-tighter">{stats.total}</h3>
                                         </div>
                                     </div>
 
                                     <div className="bg-grena p-8 rounded-[32px] text-white shadow-2xl relative overflow-hidden">
                                         <div className="absolute -right-6 -top-6 w-36 h-36 opacity-10 rotate-12"><Icons.Shield /></div>
-                                        <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-white/40 mb-4">Relatório de Tianguá</h4>
+                                        <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-white/40 mb-4">Relatório Tianguá</h4>
                                         <p className="text-base font-bold leading-tight uppercase tracking-tight relative z-10">
-                                            Operação estável. Todas as solicitações passam pelo fluxo de aprovação obrigatório.
+                                            Operação de monitoramento em conformidade. Todos os horários são auditados digitalmente.
                                         </p>
                                     </div>
                                     
                                     <button onClick={exportarDados} className="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black uppercase text-[11px] tracking-[0.3em] flex items-center justify-center gap-3 active:scale-95 transition-all shadow-xl">
-                                        <div className="w-5 h-5"><Icons.Download /></div> Auditoria CSV
+                                        <Icons.Download /> Auditoria CSV
                                     </button>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Bottom Navigation com Badge */}
+                    {/* Bottom Navigation */}
                     <nav className="bottom-nav no-print">
                         <button onClick={() => setView('registros')} className={`nav-btn ${view === 'registros' ? 'active' : ''}`}>
                             <div className="nav-icon"><Icons.Plus /></div>
